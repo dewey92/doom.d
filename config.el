@@ -2,4 +2,4 @@
 
 ;; Place your private configuration here
 (after! company
-  (setq company-idle-delay 0))
+  (setq company-idle-delay 0.1))
