@@ -6,3 +6,4 @@
 (package! evil-multiedit)
 (package! auto-dim-other-buffers)
 (package! airline-themes)
+(package! json-mode)

@@ -47,7 +47,6 @@
 ;; ================================================================================
 ;; TABS AND SPACEES CONFIGURATION
 ;; ================================================================================
-
 ;; Two callable functions for enabling/disabling tabs in Emacs
 (defun disable-tabs () (setq indent-tabs-mode nil))
 (defun enable-tabs  ()
@@ -58,6 +57,9 @@
 (add-hook 'prog-mode-hook 'enable-tabs) ;; Eable tabs fo all files
 (add-hook 'lisp-mode-hook 'disable-tabs) ;; except LISP
 (add-hook 'emacs-lisp-mode-hook 'disable-tabs) ;; and Emacs-LISP
+
+;; Making electric-indent behave sanely
+(setq-default electric-indent-inhibit t)
 
 ;; Show tab whitespace!!!
 (global-whitespace-mode)
@@ -70,24 +72,31 @@
 ;; Delete trailing spaces on save
 (add-hook 'after-save-hook #'delete-trailing-whitespace)
 
-;; (add-hook!
-;;   js2-mode 'prettier-js-mode
-;;   (add-hook 'before-save-hook #'refmt-before-save nil t))
+(defun setup-tide-mode ()
+  (interactive)
+  (tide-setup)
+  (flycheck-mode +1)
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (eldoc-mode +1)
+  (tide-hl-identifier-mode +1)
+  (company-mode +1))
 
-;; (def-package! tide
-;;   :after (typescript-mode company flycheck)
-;;   :hook ((typescript-mode . tide-setup)
-;;          (typescript-mode . tide-hl-identifier-mode)
-;;          (before-save . tide-formater-before-save)))
+(defun tsx-setup-tide ()
+  (interactive)
+  (when (string-equal "tsx" (file-name-extension buffer-file-name))
+      (setup-tide-mode)))
 
-(def-package! web-mode
+(use-package! web-mode
   :init
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
+  (setq tide-hl-identifier-idle-time 0.2)
   (setq web-mode-enable-current-element-highlight t))
 
+(add-hook 'web-mode-hook #'tsx-setup-tide)
+
 ;; enable typescript-tslint checker
-(flycheck-add-mode 'typescript-tslint 'web-mode)
+;; (flycheck-add-mode 'typescript-tslint 'web-mode)
 
 ;; ================================================================================
 ;; DO NOT EDIT
@@ -98,6 +107,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(auto-dim-other-buffers-face ((t (:background "gray20"))))
+ '(helm-selection ((t (:inherit bold :extend t :background "LemonChiffon2"))))
  '(whitespace-tab ((t (:background "#232530" :foreground "#636363")))))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
