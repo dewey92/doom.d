@@ -4,3 +4,5 @@
 (package! multi-term)
 (package! prettier-js)
 (package! evil-multiedit)
+(package! auto-dim-other-buffers)
+(package! airline-themes)

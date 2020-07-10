@@ -7,25 +7,79 @@
 (require 'doom-themes)
 (require 'evil-multiedit)
 
+;; ================================================================================
+;; KEY BINDINGS
+;; ================================================================================
 (evil-multiedit-default-keybinds) ;; call to bind keybindings
+(map! :n ";" 'evil-ex)
 
-;; Global settings (defaults)
+;; ================================================================================
+;; GLOBAL SETTINGS
+;; ================================================================================
 (setq
- doom-themes-enable-bold t    ; if nil, bold is universally disabled
- doom-themes-enable-italic t  ; if nil, italics is universally disabled
- multi-term-program "/bin/zsh"
- display-line-numbers-type 'relative
- line-spacing 3
- avy-all-windows t
- )
+  avy-all-windows t
+  multi-term-program "/bin/zsh"
+  projectile-project-search-path '("~/Projects/")
+)
+
+;; ================================================================================
+;; DISPLAY SETTINGS
+;; ================================================================================
+(setq-default
+  display-line-numbers-type 'relative
+  line-spacing 5
+  tab-width 2
+)
+(setq
+  doom-font (font-spec :family "Fira Code" :size 13)
+  doom-theme 'doom-horizon
+  doom-themes-enable-bold t    ; if nil, bold is universally disabled
+  doom-themes-enable-italic t  ; if nil, italics is universally disabled
+)
+
+(global-display-line-numbers-mode)
+
+;; Dim when not in focus
+(add-hook 'after-init-hook (lambda ()
+  (when (fboundp 'auto-dim-other-buffers-mode)
+    (auto-dim-other-buffers-mode t))))
+
+;; ================================================================================
+;; TABS AND SPACEES CONFIGURATION
+;; ================================================================================
+
+;; Two callable functions for enabling/disabling tabs in Emacs
+(defun disable-tabs () (setq indent-tabs-mode nil))
+(defun enable-tabs  ()
+  (local-set-key (kbd "TAB") 'tab-to-tab-stop)
+  (setq indent-tabs-mode t)
+  (setq tab-width 2))
+
+(add-hook 'prog-mode-hook 'enable-tabs) ;; Eable tabs fo all files
+(add-hook 'lisp-mode-hook 'disable-tabs) ;; except LISP
+(add-hook 'emacs-lisp-mode-hook 'disable-tabs) ;; and Emacs-LISP
+
+;; Show tab whitespace!!!
+(global-whitespace-mode)
+
+(setq whitespace-style '(face tabs tab-mark trailing))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(auto-dim-other-buffers-face ((t (:background "gray20"))))
+ '(whitespace-tab ((t (:foreground "#636363")))))
+
+(setq whitespace-display-mappings
+  '((tab-mark 9 [124 9] [92 9])))
+
+;; Delete trailing spaces on save
+(add-hook 'after-save-hook #'delete-trailing-whitespace)
 
 ;; (add-hook!
 ;;   js2-mode 'prettier-js-mode
 ;;   (add-hook 'before-save-hook #'refmt-before-save nil t))
-
-;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
-;; may have their own settings.
-(load-theme 'doom-spacegrey t)
 
 ;; (def-package! tide
 ;;   :after (typescript-mode company flycheck)
@@ -33,8 +87,17 @@
 ;;          (typescript-mode . tide-hl-identifier-mode)
 ;;          (before-save . tide-formater-before-save)))
 
-;; (def-package! web-mode
-;;   :init
-;;   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-;;   (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
-;;   (setq web-mode-enable-current-element-highlight t))
+(def-package! web-mode
+  :init
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
+  (setq web-mode-enable-current-element-highlight t))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(mouse-wheel-progressive-speed nil)
+ '(mouse-wheel-scroll-amount '(1 ((shift) . 5) ((control))))
+ '(wakatime-api-key "53492fc8-ae10-438e-a016-2900c6d07f72"))
+(put 'customize-group 'disabled nil)
