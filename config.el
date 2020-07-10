@@ -63,13 +63,6 @@
 (global-whitespace-mode)
 
 (setq whitespace-style '(face tabs tab-mark trailing))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(auto-dim-other-buffers-face ((t (:background "gray20"))))
- '(whitespace-tab ((t (:foreground "#636363")))))
 
 (setq whitespace-display-mappings
   '((tab-mark 9 [124 9] [92 9])))
@@ -90,8 +83,22 @@
 (def-package! web-mode
   :init
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
   (setq web-mode-enable-current-element-highlight t))
+
+;; enable typescript-tslint checker
+(flycheck-add-mode 'typescript-tslint 'web-mode)
+
+;; ================================================================================
+;; DO NOT EDIT
+;; ================================================================================
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(auto-dim-other-buffers-face ((t (:background "gray20"))))
+ '(whitespace-tab ((t (:background "#232530" :foreground "#636363")))))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
