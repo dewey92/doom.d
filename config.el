@@ -8,6 +8,11 @@
 (require 'evil-multiedit)
 
 ;; ================================================================================
+;; MACOS FIXES
+;; ================================================================================
+(add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
+
+;; ================================================================================
 ;; KEY BINDINGS
 ;; ================================================================================
 (evil-multiedit-default-keybinds) ;; call to bind keybindings
@@ -18,21 +23,23 @@
 ;; ================================================================================
 (setq
   avy-all-windows t
-  multi-term-program "/bin/zsh"
   projectile-project-search-path '("~/Projects/")
 )
+
+;; Setup wakatime
+;; (global-wakatime-mode)
 
 ;; ================================================================================
 ;; DISPLAY SETTINGS
 ;; ================================================================================
 (setq-default
-  display-line-numbers-type 'relative
+  display-line-numbers-type nil
   line-spacing 5
   tab-width 2
 )
 (setq
   doom-font (font-spec :family "Fira Code" :size 13)
-  doom-theme 'doom-horizon
+  doom-theme 'doom-one
   doom-themes-enable-bold t    ; if nil, bold is universally disabled
   doom-themes-enable-italic t  ; if nil, italics is universally disabled
 )
@@ -43,6 +50,15 @@
 (add-hook 'after-init-hook (lambda ()
   (when (fboundp 'auto-dim-other-buffers-mode)
     (auto-dim-other-buffers-mode t))))
+
+;; Configure tabbar
+(setq
+  centaur-tabs-style "wave"
+  centaur-tabs-height 32
+  centaur-tabs-set-icons t
+  centaur-tabs-gray-out-icons 'buffer
+  centaur-tabs-set-bar 'over
+  centaur-tabs-set-modified-marker t)
 
 ;; ================================================================================
 ;; TABS AND SPACEES CONFIGURATION
@@ -72,6 +88,9 @@
 ;; Delete trailing spaces on save
 (add-hook 'after-save-hook #'delete-trailing-whitespace)
 
+;; ================================================================================
+;; TYPESCRIPT CONFIGURATION
+;; ================================================================================
 (defun setup-tide-mode ()
   (interactive)
   (tide-setup)

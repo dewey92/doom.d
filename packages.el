@@ -7,3 +7,4 @@
 (package! auto-dim-other-buffers)
 (package! airline-themes)
 (package! json-mode)
+(package! wakatime-mode)
