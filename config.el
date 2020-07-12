@@ -32,6 +32,7 @@
 ;; ================================================================================
 ;; DISPLAY SETTINGS
 ;; ================================================================================
+;; (global-display-line-numbers-mode)
 (setq-default
   display-line-numbers-type nil
   line-spacing 5
@@ -44,7 +45,9 @@
   doom-themes-enable-italic t  ; if nil, italics is universally disabled
 )
 
-(global-display-line-numbers-mode)
+;; Modeline
+(setq
+ doom-modeline-buffer-encoding nil)
 
 ;; Dim when not in focus
 (add-hook 'after-init-hook (lambda ()
@@ -55,10 +58,14 @@
 (setq
   centaur-tabs-style "wave"
   centaur-tabs-height 32
-  centaur-tabs-set-icons t
-  centaur-tabs-gray-out-icons 'buffer
-  centaur-tabs-set-bar 'over
-  centaur-tabs-set-modified-marker t)
+  centaur-tabs-set-bar 'over)
+
+;; Move to the newly split window
+(defun focus-other-window (orig-fn &rest args)
+  (apply orig-fn args)
+  (call-interactively 'other-window))
+(advice-add 'evil-window-vsplit :around #'focus-other-window)
+(advice-add 'evil-window-split :around #'focus-other-window)
 
 ;; ================================================================================
 ;; TABS AND SPACEES CONFIGURATION
