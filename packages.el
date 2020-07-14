@@ -8,3 +8,4 @@
 (package! airline-themes)
 (package! json-mode)
 (package! wakatime-mode)
+(package! color-theme-sanityinc-tomorrow)

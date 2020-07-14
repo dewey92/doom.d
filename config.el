@@ -4,7 +4,7 @@
 (after! company
   (setq company-idle-delay 0.1))
 
-(require 'doom-themes)
+(require 'color-theme-sanityinc-tomorrow)
 (require 'evil-multiedit)
 
 ;; ================================================================================
@@ -27,23 +27,24 @@
 )
 
 ;; Setup wakatime
-;; (global-wakatime-mode)
+(global-wakatime-mode)
 
 ;; ================================================================================
 ;; DISPLAY SETTINGS
 ;; ================================================================================
 ;; (global-display-line-numbers-mode)
 (setq-default
-  display-line-numbers-type nil
+  display-line-numbers-type 'relative
   line-spacing 5
   tab-width 2
 )
 (setq
-  doom-font (font-spec :family "Fira Code" :size 13)
-  doom-theme 'doom-one
+  doom-font (font-spec :family "Iosevka" :size 13)
+  doom-theme 'doom-moonlight
   doom-themes-enable-bold t    ; if nil, bold is universally disabled
   doom-themes-enable-italic t  ; if nil, italics is universally disabled
 )
+(load-theme 'sanityinc-tomorrow-night t)
 
 ;; Modeline
 (setq
@@ -55,10 +56,10 @@
     (auto-dim-other-buffers-mode t))))
 
 ;; Configure tabbar
-(setq
-  centaur-tabs-style "wave"
-  centaur-tabs-height 32
-  centaur-tabs-set-bar 'over)
+;; (setq
+;;   centaur-tabs-style "wave"
+;;   centaur-tabs-height 32
+;;   centaur-tabs-set-bar 'over)
 
 ;; Move to the newly split window
 (defun focus-other-window (orig-fn &rest args)
@@ -136,7 +137,6 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(auto-dim-other-buffers-face ((t (:background "gray20"))))
- '(helm-selection ((t (:inherit bold :extend t :background "LemonChiffon2"))))
  '(whitespace-tab ((t (:background "#232530" :foreground "#636363")))))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -145,5 +145,7 @@
  ;; If there is more than one, they won't work right.
  '(mouse-wheel-progressive-speed nil)
  '(mouse-wheel-scroll-amount '(1 ((shift) . 5) ((control))))
- '(wakatime-api-key "53492fc8-ae10-438e-a016-2900c6d07f72"))
+ '(wakatime-api-key "53492fc8-ae10-438e-a016-2900c6d07f72")
+ '(wakatime-cli-path "/usr/local/bin/wakatime")
+ '(wakatime-python-bin nil))
 (put 'customize-group 'disabled nil)
