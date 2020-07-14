@@ -16,7 +16,9 @@
 ;; KEY BINDINGS
 ;; ================================================================================
 (evil-multiedit-default-keybinds) ;; call to bind keybindings
-(map! :n ";" 'evil-ex)
+(map!
+  :n ";" 'evil-ex
+  :n "g s l" 'evil-avy-goto-line)
 
 ;; ================================================================================
 ;; GLOBAL SETTINGS
@@ -25,6 +27,16 @@
   avy-all-windows t
   projectile-project-search-path '("~/Projects/")
 )
+
+;; Magit copy to clipboard current branch
+(defun copy-current-branch-name-to-clipboard ()
+  (interactive)
+  (let ((branch (magit-get-current-branch)))
+    (if branch
+      (progn
+        (kill-new branch)
+        (message "Copied '%s'" branch))
+      (user-error "No current branch"))))
 
 ;; Setup wakatime
 (global-wakatime-mode)
@@ -39,7 +51,7 @@
   tab-width 2
 )
 (setq
-  doom-font (font-spec :family "Iosevka" :size 13)
+  doom-font (font-spec :family "Iosevka" :size 14)
   doom-theme 'doom-moonlight
   doom-themes-enable-bold t    ; if nil, bold is universally disabled
   doom-themes-enable-italic t  ; if nil, italics is universally disabled
@@ -127,6 +139,10 @@
 
 ;; enable typescript-tslint checker
 ;; (flycheck-add-mode 'typescript-tslint 'web-mode)
+
+;; ================================================================================
+;; PURESCRIPT
+;; ================================================================================
 
 ;; ================================================================================
 ;; DO NOT EDIT
