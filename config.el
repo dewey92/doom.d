@@ -18,7 +18,8 @@
 (evil-multiedit-default-keybinds) ;; call to bind keybindings
 (map!
   :n ";" 'evil-ex
-  :n "g s l" 'evil-avy-goto-line)
+  :n "g s l" 'evil-avy-goto-line
+  :n "g s g" 'evil-avy-goto-word-0)
 
 ;; ================================================================================
 ;; GLOBAL SETTINGS
@@ -129,6 +130,17 @@
 
 (add-hook 'web-mode-hook #'tsx-setup-tide)
 
+;; Setup linter
+(after! flycheck
+  (flycheck-add-mode 'javascript-eslint 'typescript-mode)
+  (flycheck-add-mode 'javascript-eslint 'web-mode)
+  (flycheck-add-mode 'css-stylelint 'web-mode)
+  (flycheck-add-mode 'scss-stylelint 'web-mode)
+  (add-hook 'web-mode-hook (lambda () (flycheck-add-next-checker 'javascript-eslint 'css-stylelint)))
+  (add-hook 'web-mode-hook (lambda () (flycheck-add-next-checker 'css-stylelint 'scss-stylelint)))
+  (add-hook 'web-mode-hook (lambda () (when (executable-find "eslint") (flycheck-select-checker 'javascript-eslint))))
+  )
+
 ;; enable typescript-tslint checker
 ;; (flycheck-add-mode 'typescript-tslint 'web-mode)
 
@@ -153,6 +165,7 @@
  ;; If there is more than one, they won't work right.
  '(mouse-wheel-progressive-speed nil)
  '(mouse-wheel-scroll-amount '(1 ((shift) . 5) ((control))))
+ '(package-selected-packages '(wakatime-mode))
  '(wakatime-api-key "53492fc8-ae10-438e-a016-2900c6d07f72")
  '(wakatime-cli-path "/usr/local/bin/wakatime")
  '(wakatime-python-bin nil))
