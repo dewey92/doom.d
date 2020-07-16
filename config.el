@@ -44,11 +44,9 @@
 ;; ================================================================================
 ;; DISPLAY SETTINGS
 ;; ================================================================================
-;; (global-display-line-numbers-mode)
 (setq-default
   display-line-numbers-type 'relative
   line-spacing 5
-  tab-width 2
 )
 (setq
   doom-font (font-spec :family "Iosevka" :size 14)
@@ -83,27 +81,20 @@
 ;; ================================================================================
 ;; TABS AND SPACEES CONFIGURATION
 ;; ================================================================================
-;; Two callable functions for enabling/disabling tabs in Emacs
-(defun disable-tabs () (setq indent-tabs-mode nil))
-(defun enable-tabs  ()
-  (local-set-key (kbd "TAB") 'tab-to-tab-stop)
-  (setq indent-tabs-mode t)
-  (setq tab-width 2))
+(setq-default
+  indent-tabs-mode t
+  tab-width 2)
 
-(add-hook 'prog-mode-hook 'enable-tabs) ;; Eable tabs fo all files
-(add-hook 'lisp-mode-hook 'disable-tabs) ;; except LISP
-(add-hook 'emacs-lisp-mode-hook 'disable-tabs) ;; and Emacs-LISP
+(setq-hook! '(lisp-mode-hook emacs-lisp-mode-hook) indent-tabs-mode nil) ;; except LISP family
+
+;; (setq
+;;   whitespace-style '(face tabs tab-mark trailing indentation)
+;;   whitespace-display-mappings '(
+;;     (tab-mark 9 [8614 9] [92 9]))
+;;   )
 
 ;; Making electric-indent behave sanely
 (setq-default electric-indent-inhibit t)
-
-;; Show tab whitespace!!!
-(global-whitespace-mode)
-
-(setq whitespace-style '(face tabs tab-mark trailing))
-
-(setq whitespace-display-mappings
-  '((tab-mark 9 [124 9] [92 9])))
 
 ;; Delete trailing spaces on save
 (add-hook 'after-save-hook #'delete-trailing-whitespace)
@@ -131,6 +122,7 @@
   (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
   (setq tide-hl-identifier-idle-time 0.2)
   (setq web-mode-enable-current-element-highlight t)
+  (setq web-mode-css-indent-offset 2)
   (setq web-mode-code-indent-offset 2)
   (setq web-mode-markup-indent-offset 2)
   (setq typescript-indent-level 2))
