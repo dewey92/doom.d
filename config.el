@@ -18,7 +18,6 @@
 (evil-multiedit-default-keybinds) ;; call to bind keybindings
 (map!
   :n ";" 'evil-ex
-  :n "g s l" 'evil-avy-goto-line
   :n "g s g" 'evil-avy-goto-word-0)
 
 ;; ================================================================================
@@ -59,18 +58,14 @@
 
 ;; Modeline
 (setq
- doom-modeline-buffer-encoding nil)
+  doom-modeline-buffer-encoding nil
+  doom-modeline-buffer-file-name-style 'file-name
+  doom-modeline-vcs-max-length 18)
 
 ;; Dim when not in focus
 (add-hook 'after-init-hook (lambda ()
   (when (fboundp 'auto-dim-other-buffers-mode)
     (auto-dim-other-buffers-mode t))))
-
-;; Configure tabbar
-;; (setq
-;;   centaur-tabs-style "wave"
-;;   centaur-tabs-height 32
-;;   centaur-tabs-set-bar 'over)
 
 ;; Move to the newly split window
 (defun focus-other-window (orig-fn &rest args)
@@ -128,17 +123,18 @@
   (setq web-mode-markup-indent-offset 2)
   (setq typescript-indent-level 2))
 
+(add-hook 'typescript-mode-hook #'setup-tide-mode)
 (add-hook 'web-mode-hook #'tsx-setup-tide)
 
 ;; Setup linter
 (after! flycheck
   (flycheck-add-mode 'javascript-eslint 'typescript-mode)
   (flycheck-add-mode 'javascript-eslint 'web-mode)
-  (flycheck-add-mode 'css-stylelint 'web-mode)
-  (flycheck-add-mode 'scss-stylelint 'web-mode)
-  (add-hook 'web-mode-hook (lambda () (flycheck-add-next-checker 'javascript-eslint 'css-stylelint)))
-  (add-hook 'web-mode-hook (lambda () (flycheck-add-next-checker 'css-stylelint 'scss-stylelint)))
-  (add-hook 'web-mode-hook (lambda () (when (executable-find "eslint") (flycheck-select-checker 'javascript-eslint))))
+  (if (executable-find "eslint")
+      (add-hook! '(web-mode-hook typescript-mode-hook)
+        (defun select-eslint ()
+          (flycheck-select-checker 'javascript-eslint)))
+      (user-error "Cannot find eslint executable"))
   )
 
 ;; enable typescript-tslint checker
