@@ -1,11 +1,6 @@
 ;;; ~/.doom.d/config.el -*- lexical-binding: t; -*-
 
 ;; Place your private configuration here
-(after! company
-  (setq company-idle-delay 0.1))
-
-(require 'color-theme-sanityinc-tomorrow)
-(require 'evil-multiedit)
 
 ;; ================================================================================
 ;; MACOS FIXES
@@ -15,7 +10,11 @@
 ;; ================================================================================
 ;; KEY BINDINGS
 ;; ================================================================================
-(evil-multiedit-default-keybinds) ;; call to bind keybindings
+(use-package! evil-multiedit
+  :config
+  (evil-multiedit-default-keybinds) ;; call to bind keybindings
+  )
+
 (map!
   :n ";" 'evil-ex
   :n "g s g" 'evil-avy-goto-word-0)
@@ -41,6 +40,10 @@
 ;; Setup wakatime
 (global-wakatime-mode)
 
+;; Autocomplete
+(after! company
+  (setq company-idle-delay 0.1))
+
 ;; ================================================================================
 ;; DISPLAY SETTINGS
 ;; ================================================================================
@@ -50,11 +53,15 @@
 )
 (setq
   doom-font (font-spec :family "Iosevka" :size 14)
-  doom-theme 'doom-moonlight
-  doom-themes-enable-bold t    ; if nil, bold is universally disabled
-  doom-themes-enable-italic t  ; if nil, italics is universally disabled
+  ;; doom-theme 'doom-moonlight
+  ;; doom-themes-enable-bold t    ; if nil, bold is universally disabled
+  ;; doom-themes-enable-italic t  ; if nil, italics is universally disabled
 )
-(load-theme 'sanityinc-tomorrow-night t)
+
+(use-package! color-theme-sanityinc-tomorrow
+  :config
+  (load-theme 'sanityinc-tomorrow-night t)
+  )
 
 ;; Modeline
 (setq
