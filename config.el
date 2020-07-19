@@ -102,10 +102,18 @@
   (interactive)
   (tide-setup)
   (flycheck-mode +1)
-  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (setq
+    flycheck-check-syntax-automatically '(save idle-change mode-enabled)
+    tide-completion-ignore-case t
+    tide-completion-show-source t
+    tide-completion-detailed t
+    tide-hl-identifier-idle-time 0.2
+    typescript-indent-level 2
+    )
   (eldoc-mode +1)
   (tide-hl-identifier-mode +1)
-  (company-mode +1))
+  (company-mode +1)
+  )
 
 (defun tsx-setup-tide ()
   (interactive)
@@ -116,12 +124,19 @@
   :init
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
-  (setq tide-hl-identifier-idle-time 0.2)
   (setq web-mode-enable-current-element-highlight t)
   (setq web-mode-css-indent-offset 2)
   (setq web-mode-code-indent-offset 2)
   (setq web-mode-markup-indent-offset 2)
-  (setq typescript-indent-level 2))
+)
+
+(use-package! tide
+  :config
+  (map! :localleader
+        :map tide-mode-map
+        "re" #'tide-project-errors
+        "rf" #'tide-rename-file
+        ))
 
 (add-hook 'typescript-mode-hook #'setup-tide-mode)
 (add-hook 'web-mode-hook #'tsx-setup-tide)
@@ -130,15 +145,13 @@
 (after! flycheck
   (flycheck-add-mode 'javascript-eslint 'typescript-mode)
   (flycheck-add-mode 'javascript-eslint 'web-mode)
-  (if (executable-find "eslint")
-      (add-hook! '(web-mode-hook typescript-mode-hook)
-        (defun select-eslint ()
-          (flycheck-select-checker 'javascript-eslint)))
-      (user-error "Cannot find eslint executable"))
+  (flycheck-add-next-checker 'typescript-tide 'javascript-eslint 'append)
+  (flycheck-add-next-checker 'tsx-tide 'javascript-eslint 'append)
+  (when (string-equal "ts" (file-name-extension buffer-file-name))
+      (flycheck-select-checker 'typescript-tide))
+  (when (string-equal "tsx" (file-name-extension buffer-file-name))
+      (flycheck-select-checker 'tsx-tide))
   )
-
-;; enable typescript-tslint checker
-;; (flycheck-add-mode 'typescript-tslint 'web-mode)
 
 ;; ================================================================================
 ;; PURESCRIPT
