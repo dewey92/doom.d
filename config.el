@@ -17,7 +17,10 @@
 
 (map!
   :n ";" 'evil-ex
-  :n "g s g" 'evil-avy-goto-word-0)
+  :n "gsg" 'evil-avy-goto-word-0
+  (:leader
+    "vx" 'er/expand-region)
+  )
 
 ;; ================================================================================
 ;; GLOBAL SETTINGS
@@ -38,11 +41,21 @@
       (user-error "No current branch"))))
 
 ;; Setup wakatime
-(global-wakatime-mode)
+(use-package! wakatime-mode
+  :init
+  (setq
+    wakatime-api-key "53492fc8-ae10-438e-a016-2900c6d07f72"
+    wakatime-cli-path "/usr/local/bin/wakatime"
+    wakatime-python-bin nil)
+  :config
+  (global-wakatime-mode)
+)
 
 ;; Autocomplete
-(after! company
-  (setq company-idle-delay 0.1))
+(use-package! company
+  :init
+  (setq company-idle-delay 0.1)
+  )
 
 ;; ================================================================================
 ;; DISPLAY SETTINGS
@@ -61,13 +74,22 @@
 (use-package! color-theme-sanityinc-tomorrow
   :config
   (load-theme 'sanityinc-tomorrow-night t)
-  )
+)
+
+(use-package! highlight-indent-guides
+  :init
+  (setq
+    highlight-indent-guides-responsive 'top)
+)
 
 ;; Modeline
-(setq
-  doom-modeline-buffer-encoding nil
-  doom-modeline-buffer-file-name-style 'file-name
-  doom-modeline-vcs-max-length 18)
+(use-package! doom-modeline
+  :init
+  (setq
+    doom-modeline-buffer-encoding nil
+    doom-modeline-buffer-file-name-style 'file-name
+    doom-modeline-vcs-max-length 18)
+)
 
 ;; Dim when not in focus
 (add-hook 'after-init-hook (lambda ()
@@ -90,12 +112,6 @@
 
 (setq-hook! '(lisp-mode-hook emacs-lisp-mode-hook) indent-tabs-mode nil) ;; except LISP family
 
-;; (setq
-;;   whitespace-style '(face tabs tab-mark trailing indentation)
-;;   whitespace-display-mappings '(
-;;     (tab-mark 9 [8614 9] [92 9]))
-;;   )
-
 ;; Making electric-indent behave sanely
 (setq-default electric-indent-inhibit t)
 
@@ -113,8 +129,8 @@
     flycheck-check-syntax-automatically '(save idle-change mode-enabled)
     tide-completion-ignore-case t
     tide-completion-show-source t
-    tide-completion-detailed t
-    tide-hl-identifier-idle-time 0.2
+    tide-completion-detailed nil
+    tide-hl-identifier-idle-time 0.5
     typescript-indent-level 2
     )
   (eldoc-mode +1)
@@ -173,7 +189,6 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(auto-dim-other-buffers-face ((t (:background "gray20"))))
- '(whitespace-tab ((t (:background "#232530" :foreground "#636363")))))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -181,8 +196,5 @@
  ;; If there is more than one, they won't work right.
  '(mouse-wheel-progressive-speed nil)
  '(mouse-wheel-scroll-amount '(1 ((shift) . 5) ((control))))
- '(package-selected-packages '(wakatime-mode))
- '(wakatime-api-key "53492fc8-ae10-438e-a016-2900c6d07f72")
- '(wakatime-cli-path "/usr/local/bin/wakatime")
- '(wakatime-python-bin nil))
+ '(package-selected-packages '(wakatime-mode)))
 (put 'customize-group 'disabled nil)
