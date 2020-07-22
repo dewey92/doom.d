@@ -147,10 +147,12 @@
   :init
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
-  (setq web-mode-enable-current-element-highlight t)
-  (setq web-mode-css-indent-offset 2)
-  (setq web-mode-code-indent-offset 2)
-  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-enable-current-element-highlight t
+    web-mode-css-indent-offset 2
+    web-mode-code-indent-offset 2
+    web-mode-markup-indent-offset 2
+    web-mode-indentless-elements 2
+    web-mode-indentless-attributes 2)
 )
 
 (use-package! tide
@@ -170,10 +172,9 @@
   (flycheck-add-mode 'javascript-eslint 'web-mode)
   (flycheck-add-next-checker 'typescript-tide 'javascript-eslint 'append)
   (flycheck-add-next-checker 'tsx-tide 'javascript-eslint 'append)
-  (when (string-equal "ts" (file-name-extension buffer-file-name))
-      (flycheck-select-checker 'typescript-tide))
-  (when (string-equal "tsx" (file-name-extension buffer-file-name))
-      (flycheck-select-checker 'tsx-tide))
+  (pcase (file-name-extension buffer-file-name)
+    ("ts" (flycheck-select-checker 'typescript-tide))
+    ("tsx" (flycheck-select-checker 'tsx-tide)))
   )
 
 ;; ================================================================================
