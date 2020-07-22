@@ -93,9 +93,14 @@
 )
 
 ;; Dim when not in focus
-(add-hook 'after-init-hook (lambda ()
-  (when (fboundp 'auto-dim-other-buffers-mode)
-    (auto-dim-other-buffers-mode t))))
+(use-package! dimmer
+  :init
+  (setq
+    dimmer-adjustment-mode :both
+    dimmer-fraction 0.1)
+  :config
+  (dimmer-configure-company-box)
+  (dimmer-mode t))
 
 ;; Move to the newly split window
 (defun focus-other-window (orig-fn &rest args)
@@ -184,12 +189,6 @@
 ;; ================================================================================
 ;; DO NOT EDIT
 ;; ================================================================================
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(auto-dim-other-buffers-face ((t (:background "gray90")))))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
