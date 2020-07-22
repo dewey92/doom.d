@@ -64,17 +64,18 @@
   display-line-numbers-type 'relative
   line-spacing 5
 )
+
 (setq
   doom-font (font-spec :family "Iosevka" :size 14)
-  ;; doom-theme 'doom-moonlight
-  ;; doom-themes-enable-bold t    ; if nil, bold is universally disabled
-  ;; doom-themes-enable-italic t  ; if nil, italics is universally disabled
+  doom-theme 'zaiste
+  doom-themes-enable-bold t    ; if nil, bold is universally disabled
+  doom-themes-enable-italic t  ; if nil, italics is universally disabled
 )
 
-(use-package! color-theme-sanityinc-tomorrow
-  :config
-  (load-theme 'sanityinc-tomorrow-night t)
-)
+;; (use-package! color-theme-sanityinc-tomorrow
+;;   :config
+;;   (load-theme 'sanityinc-tomorrow-night t)
+;; )
 
 (use-package! highlight-indent-guides
   :init
@@ -150,9 +151,7 @@
   (setq web-mode-enable-current-element-highlight t
     web-mode-css-indent-offset 2
     web-mode-code-indent-offset 2
-    web-mode-markup-indent-offset 2
-    web-mode-indentless-elements 2
-    web-mode-indentless-attributes 2)
+    web-mode-markup-indent-offset 2)
 )
 
 (use-package! tide
@@ -172,10 +171,11 @@
   (flycheck-add-mode 'javascript-eslint 'web-mode)
   (flycheck-add-next-checker 'typescript-tide 'javascript-eslint 'append)
   (flycheck-add-next-checker 'tsx-tide 'javascript-eslint 'append)
-  (pcase (file-name-extension buffer-file-name)
+  (pcase (file-name-extension (or buffer-file-name ""))
     ("ts" (flycheck-select-checker 'typescript-tide))
-    ("tsx" (flycheck-select-checker 'tsx-tide)))
+    ("tsx" (flycheck-select-checker 'tsx-tide))
   )
+)
 
 ;; ================================================================================
 ;; PURESCRIPT
@@ -189,7 +189,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(auto-dim-other-buffers-face ((t (:background "gray20"))))
+ '(auto-dim-other-buffers-face ((t (:background "gray90")))))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
