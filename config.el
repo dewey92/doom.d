@@ -77,6 +77,14 @@
 ;;   (load-theme 'sanityinc-tomorrow-night t)
 ;; )
 
+(use-package! rainbow-mode)
+(use-package! zoom
+  :init
+  (setq zoom-size '(0.618 . 0.618))
+  :config
+  (zoom-mode t)
+)
+
 (use-package! highlight-indent-guides
   :init
   (setq
