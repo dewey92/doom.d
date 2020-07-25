@@ -6,6 +6,11 @@
 ;; MACOS FIXES
 ;; ================================================================================
 (add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
+(add-to-list 'load-path "~/.emacs.d/3rd/")
+
+(require 'hl-line+)
+(hl-line-when-idle-interval 0.3)
+(toggle-hl-line-when-idle 1)
 
 ;; ================================================================================
 ;; KEY BINDINGS
@@ -18,6 +23,7 @@
 (map!
   :n ";" 'evil-ex
   :n "gsg" 'evil-avy-goto-word-0
+  :n "gsl" 'evil-avy-goto-line
   (:leader
     "vx" 'er/expand-region)
   )
@@ -29,6 +35,9 @@
   avy-all-windows t
   projectile-project-search-path '("~/Projects/")
 )
+
+;; Maximize on startup
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
 ;; Magit copy to clipboard current branch
 (defun copy-current-branch-name-to-clipboard ()
@@ -42,11 +51,10 @@
 
 ;; Setup wakatime
 (use-package! wakatime-mode
-  :init
-  (setq
-    wakatime-api-key "53492fc8-ae10-438e-a016-2900c6d07f72"
-    wakatime-cli-path "/usr/local/bin/wakatime"
-    wakatime-python-bin nil)
+  :custom
+  (wakatime-api-key "53492fc8-ae10-438e-a016-2900c6d07f72")
+  (wakatime-cli-path "/usr/local/bin/wakatime")
+  (wakatime-python-bin nil)
   :config
   (global-wakatime-mode)
 )
@@ -61,7 +69,7 @@
 ;; DISPLAY SETTINGS
 ;; ================================================================================
 (setq-default
-  display-line-numbers-type 'relative
+  display-line-numbers-type nil
   line-spacing 5
 )
 
@@ -71,6 +79,8 @@
   doom-themes-enable-bold t    ; if nil, bold is universally disabled
   doom-themes-enable-italic t  ; if nil, italics is universally disabled
 )
+(custom-theme-set-faces! 'zaiste
+  `(web-mode-current-element-highlight-face :background "#a1d1ff" :foreground "#e66300"))
 
 ;; (use-package! color-theme-sanityinc-tomorrow
 ;;   :config
@@ -79,43 +89,37 @@
 
 (use-package! rainbow-mode)
 (use-package! zoom
-  :init
-  (setq zoom-size '(0.618 . 0.618))
+  :custom
+  (zoom-size '(0.618 . 0.618))
   :config
   (zoom-mode t)
 )
 
 (use-package! highlight-indent-guides
-  :init
-  (setq
-    highlight-indent-guides-responsive 'top)
+  :custom
+  (highlight-indent-guides-responsive 'top)
 )
 
 ;; Modeline
 (use-package! doom-modeline
-  :init
-  (setq
-    doom-modeline-buffer-encoding nil
-    doom-modeline-buffer-file-name-style 'file-name
-    doom-modeline-vcs-max-length 18)
+  :custom
+  (doom-modeline-buffer-encoding nil)
+  (doom-modeline-buffer-file-name-style 'file-name)
+  (doom-modeline-vcs-max-length 18)
 )
 
 ;; Dim when not in focus
 (use-package! dimmer
-  :init
-  (setq
-    dimmer-adjustment-mode :both
-    dimmer-fraction 0.1)
+  :custom
+  (dimmer-adjustment-mode :both)
+  (dimmer-fraction 0.1)
   :config
   (dimmer-configure-company-box)
   (dimmer-mode t))
 
-;; Move to the newly split window
-(defun focus-other-window (orig-fn &rest args)
-  (apply orig-fn args)
-  (call-interactively 'other-window))
-(advice-add 'evil-window-vsplit :around #'focus-other-window)
-(advice-add 'evil-window-split :around #'focus-other-window)
+;; Switch to the new window after splitting
+(setq evil-split-window-below t
+      evil-vsplit-window-right t)
 
 ;; ================================================================================
 ;; TABS AND SPACEES CONFIGURATION
@@ -143,8 +147,6 @@
     flycheck-check-syntax-automatically '(save idle-change mode-enabled)
     tide-completion-ignore-case t
     tide-completion-show-source t
-    tide-completion-detailed nil
-    tide-hl-identifier-idle-time 0.5
     typescript-indent-level 2
     )
   (eldoc-mode +1)
