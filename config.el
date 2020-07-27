@@ -52,6 +52,9 @@
 
 ;; Setup wakatime
 (use-package! wakatime-mode
+  :custom
+  (wakatime-api-key "53492fc8-ae10-438e-a016-2900c6d07f72")
+  (wakatime-cli-path "/usr/local/bin/wakatime")
   :config
   (global-wakatime-mode))
 
@@ -198,7 +201,5 @@
  ;; If there is more than one, they won't work right.
  '(mouse-wheel-progressive-speed nil)
  '(mouse-wheel-scroll-amount '(1 ((shift) . 5) ((control))))
- '(package-selected-packages '(wakatime-mode))
- '(wakatime-api-key "53492fc8-ae10-438e-a016-2900c6d07f72")
- '(wakatime-cli-path "/usr/local/bin/wakatime"))
+ '(package-selected-packages '(wakatime-mode)))
 (put 'customize-group 'disabled nil)
