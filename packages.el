@@ -10,6 +10,5 @@
 
 ;; Editor
 (package! evil-multiedit)
-(package! multi-vterm)
 (package! json-mode)
 (package! wakatime-mode)
