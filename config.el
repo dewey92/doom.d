@@ -160,12 +160,10 @@
   (interactive)
   (tide-setup)
   (flycheck-mode +1)
-  (setq
-   flycheck-check-syntax-automatically '(save idle-change mode-enabled)
-   tide-completion-ignore-case t
-   tide-completion-show-source t
-   typescript-indent-level 2
-   )
+  (setq flycheck-check-syntax-automatically '(save idle-change mode-enabled)
+        tide-completion-ignore-case t
+        tide-completion-show-source t
+        typescript-indent-level 2)
   (eldoc-mode +1)
   (tide-hl-identifier-mode +1)
   (company-mode +1)
@@ -174,7 +172,10 @@
 (defun tsx-setup-tide ()
   (interactive)
   (when (string-equal "tsx" (file-name-extension buffer-file-name))
-      (setup-tide-mode)))
+    (setup-tide-mode)))
+
+(defun eslint-fix-on-save ()
+  (add-hook 'after-save-hook 'eslint-fix nil t))
 
 (use-package! web-mode
   :init
@@ -194,8 +195,8 @@
         "rf" #'tide-rename-file
         ))
 
-(add-hook 'typescript-mode-hook #'setup-tide-mode)
-(add-hook 'web-mode-hook #'tsx-setup-tide)
+(add-hook! 'typescript-mode-hook #'setup-tide-mode #'eslint-fix-on-save)
+(add-hook! 'web-mode-hook #'tsx-setup-tide #'eslint-fix-on-save)
 
 ;; Setup linter
 (after! flycheck

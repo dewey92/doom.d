@@ -12,3 +12,4 @@
 (package! evil-multiedit)
 (package! json-mode)
 (package! wakatime-mode)
+(package! eslint-fix :recipe (:host github :repo "codesuki/eslint-fix"))
