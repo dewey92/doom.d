@@ -5,7 +5,6 @@
 (package! color-theme-sanityinc-tomorrow)
 (package! airline-themes)
 (package! dimmer)
-(package! rainbow-mode)
 (package! zoom)
 
 ;; Editor

@@ -72,9 +72,13 @@
 (setq doom-font (font-spec :family "Iosevka" :size 14))
 
 ;; Zaiste theme
-(setq doom-theme 'zaiste)
-(custom-theme-set-faces! 'zaiste
-  `(web-mode-current-element-highlight-face :background "#a1d1ff" :foreground "#e66300"))
+;; (setq doom-theme 'zaiste)
+;; (custom-theme-set-faces! 'zaiste
+;;   `(web-mode-current-element-highlight-face :background "#a1d1ff" :foreground "#e66300"))
+
+;; Doom theme
+(setq doom-theme 'doom-oceanic-next)
+;; (setq doom-theme 'doom-snazzy)
 
 ;; Sanitynic theme
 ;; (use-package! color-theme-sanityinc-tomorrow
@@ -82,7 +86,6 @@
 ;;   (load-theme 'sanityinc-tomorrow-night t)
 ;; )
 
-(use-package! rainbow-mode)
 (use-package! zoom
   :custom
   (zoom-size '(0.5 . 0.618))
@@ -93,20 +96,19 @@
   :custom
   (highlight-indent-guides-responsive 'top))
 
-
 ;; Modeline
-;; (use-package! doom-modeline
-;;   :custom
-;;   (doom-modeline-buffer-encoding nil)
-;;   (doom-modeline-buffer-file-name-style 'file-name)
-;;   (doom-modeline-vcs-max-length 18)
-;; )
+(use-package! doom-modeline
+  :custom
+  (doom-modeline-buffer-encoding nil)
+  (doom-modeline-buffer-file-name-style 'file-name)
+  (doom-modeline-vcs-max-length 18)
+)
 
 ;; Dim when not in focus
 (use-package! dimmer
   :custom
   (dimmer-adjustment-mode :both)
-  (dimmer-fraction 0.1)
+  (dimmer-fraction 0.5)
   :config
   (dimmer-configure-company-box)
   (dimmer-configure-posframe)
@@ -117,27 +119,6 @@
 ;; Switch to the new window after splitting
 (setq evil-split-window-below t
       evil-vsplit-window-right t)
-
-;; WARNING: Only available on Yamamoto's fork
-;; Implement fade-outs
-(defcustom mac-animation-duration 0.5
-  "Duration of transition animations")
-(defvar mac-animation-locked-p nil)
-(defun mac-animation-toggle-lock ()
-  (setq mac-animation-locked-p (not mac-animation-locked-p)))
-
-(defun animate-frame-fade-out (&rest args)
-  (unless mac-animation-locked-p
-    (mac-animation-toggle-lock)
-    (mac-start-animation nil :type 'fade-out :duration mac-animation-duration)
-    (run-with-timer mac-animation-duration nil 'mac-animation-toggle-lock)))
-
-;; Fade outs everywhere!
-(advice-add 'set-window-buffer :before 'animate-frame-fade-out)
-(advice-add 'split-window :before 'animate-frame-fade-out)
-(advice-add 'delete-window :before 'animate-frame-fade-out)
-(advice-add 'delete-other-windows :before 'animate-frame-fade-out)
-(advice-add 'window-toggle-side-windows :before 'animate-frame-fade-out)
 
 ;; ================================================================================
 ;; TABS AND SPACEES CONFIGURATION
@@ -160,7 +141,7 @@
   (interactive)
   (tide-setup)
   (flycheck-mode +1)
-  (setq flycheck-check-syntax-automatically '(save idle-change mode-enabled)
+  (setq flycheck-check-syntax-automatically '(save mode-enabled)
         tide-completion-ignore-case t
         tide-completion-show-source t
         typescript-indent-level 2)
@@ -178,13 +159,16 @@
   (add-hook 'after-save-hook 'eslint-fix nil t))
 
 (use-package! web-mode
-  :init
-  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
-  (setq web-mode-enable-current-element-highlight t
-        web-mode-css-indent-offset 2
-        web-mode-code-indent-offset 2
-        web-mode-markup-indent-offset 2)
+  :mode (("\\.html?\\'" . web-mode)
+         ("\\.tsx\\'" . web-mode))
+  :custom
+  (web-mode-enable-current-element-highlight t)
+  (web-mode-css-indent-offset 2)
+  (web-mode-code-indent-offset 2)
+  (web-mode-markup-indent-offset 2)
+
+  (web-mode-enable-comment-annotation t)
+  (web-mode-enable-comment-interpolation t)
   )
 
 (use-package! tide
