@@ -152,6 +152,14 @@
   (tide-hl-identifier-mode +1)
   (company-mode +1)
   (subword-mode 1)
+  ;; Setup ESLint
+  (flycheck-add-mode 'javascript-eslint 'typescript-mode)
+  (flycheck-add-mode 'javascript-eslint 'web-mode)
+  (flycheck-add-next-checker 'typescript-tide 'javascript-eslint 'append)
+  (flycheck-add-next-checker 'tsx-tide 'javascript-eslint 'append)
+  (pcase (file-name-extension (or buffer-file-name ""))
+    ("ts" (flycheck-select-checker 'typescript-tide))
+    ("tsx" (flycheck-select-checker 'tsx-tide)))
   )
 
 (defun setup-tide-tsx-mode ()
@@ -170,30 +178,22 @@
   (web-mode-enable-comment-annotation t)
   (web-mode-enable-comment-interpolation t)
   :init
-  (add-hook 'web-mode-hook #'setup-tide-tsx-mode)
-  )
+  (add-hook 'web-mode-hook 'setup-tide-tsx-mode))
 
 (use-package! typescript-mode
   :custom
   (typescript-indent-level 2)
   :init
-  (add-hook 'typescript-mode-hook #'setup-tide-mode))
+  (add-hook 'typescript-mode-hook 'setup-tide-mode))
 
 (use-package! tide
+  :after (typescript-mode company flycheck)
   :config
   (map! :localleader
         :map tide-mode-map
         "re" #'tide-project-errors
         "rf" #'tide-rename-file
         ))
-  ;; Setup ESLint
-  (flycheck-add-mode 'javascript-eslint 'typescript-mode)
-  (flycheck-add-mode 'javascript-eslint 'web-mode)
-  (flycheck-add-next-checker 'typescript-tide 'javascript-eslint 'append)
-  (flycheck-add-next-checker 'tsx-tide 'javascript-eslint 'append)
-  (pcase (file-name-extension (or buffer-file-name ""))
-    ("ts" (flycheck-select-checker 'typescript-tide))
-    ("tsx" (flycheck-select-checker 'tsx-tide)))
 
 ;; ================================================================================
 ;; PURESCRIPT
