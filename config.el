@@ -71,6 +71,10 @@
 
 (setq doom-font (font-spec :family "Iosevka" :size 14))
 
+;; Set transparency
+(set-frame-parameter (selected-frame) 'alpha '(98 98))
+(add-to-list 'default-frame-alist '(alpha 98 98))
+
 ;; Zaiste theme
 ;; (setq doom-theme 'zaiste)
 ;; (custom-theme-set-faces! 'zaiste
@@ -138,25 +142,21 @@
 ;; TYPESCRIPT CONFIGURATION
 ;; ================================================================================
 (defun setup-tide-mode ()
-  (interactive)
   (tide-setup)
   (flycheck-mode +1)
-  (setq flycheck-check-syntax-automatically '(save mode-enabled)
+  (setq flycheck-check-syntax-automatically '(save mode-enabled idle-change)
+        flycheck-disabled-checkers '(typescript-tslint)
         tide-completion-ignore-case t
-        tide-completion-show-source t
-        typescript-indent-level 2)
+        tide-completion-show-source t)
   (eldoc-mode +1)
   (tide-hl-identifier-mode +1)
   (company-mode +1)
+  (subword-mode 1)
   )
 
-(defun tsx-setup-tide ()
-  (interactive)
+(defun setup-tide-tsx-mode ()
   (when (string-equal "tsx" (file-name-extension buffer-file-name))
     (setup-tide-mode)))
-
-(defun eslint-fix-on-save ()
-  (add-hook 'after-save-hook 'eslint-fix nil t))
 
 (use-package! web-mode
   :mode (("\\.html?\\'" . web-mode)
@@ -169,7 +169,15 @@
 
   (web-mode-enable-comment-annotation t)
   (web-mode-enable-comment-interpolation t)
+  :init
+  (add-hook 'web-mode-hook #'setup-tide-tsx-mode)
   )
+
+(use-package! typescript-mode
+  :custom
+  (typescript-indent-level 2)
+  :init
+  (add-hook 'typescript-mode-hook #'setup-tide-mode))
 
 (use-package! tide
   :config
@@ -178,12 +186,7 @@
         "re" #'tide-project-errors
         "rf" #'tide-rename-file
         ))
-
-(add-hook! 'typescript-mode-hook #'setup-tide-mode #'eslint-fix-on-save)
-(add-hook! 'web-mode-hook #'tsx-setup-tide #'eslint-fix-on-save)
-
-;; Setup linter
-(after! flycheck
+  ;; Setup ESLint
   (flycheck-add-mode 'javascript-eslint 'typescript-mode)
   (flycheck-add-mode 'javascript-eslint 'web-mode)
   (flycheck-add-next-checker 'typescript-tide 'javascript-eslint 'append)
@@ -191,7 +194,6 @@
   (pcase (file-name-extension (or buffer-file-name ""))
     ("ts" (flycheck-select-checker 'typescript-tide))
     ("tsx" (flycheck-select-checker 'tsx-tide)))
-  )
 
 ;; ================================================================================
 ;; PURESCRIPT
