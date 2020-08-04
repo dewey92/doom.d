@@ -158,11 +158,6 @@
   (flycheck-add-next-checker 'typescript-tide 'javascript-eslint 'append)
   (flycheck-add-next-checker 'tsx-tide 'javascript-eslint 'append))
 
-;; TODO: remove
-(defun setup-tide-tsx-mode ()
-  (when (string-equal "tsx" (file-name-extension buffer-file-name))
-    (setup-tide-mode)))
-
 (use-package! web-mode
   :mode (("\\.html?\\'" . web-mode))
   :custom
