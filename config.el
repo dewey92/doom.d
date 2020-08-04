@@ -154,21 +154,17 @@
   (subword-mode 1)
   ;; Setup ESLint
   (flycheck-add-mode 'javascript-eslint 'typescript-mode)
-  (flycheck-add-mode 'javascript-eslint 'web-mode)
+  (flycheck-add-mode 'javascript-eslint 'typescript-tsx-mode)
   (flycheck-add-next-checker 'typescript-tide 'javascript-eslint 'append)
-  (flycheck-add-next-checker 'tsx-tide 'javascript-eslint 'append)
-  (pcase (file-name-extension (or buffer-file-name ""))
-    ("ts" (flycheck-select-checker 'typescript-tide))
-    ("tsx" (flycheck-select-checker 'tsx-tide)))
-  )
+  (flycheck-add-next-checker 'tsx-tide 'javascript-eslint 'append))
 
+;; TODO: remove
 (defun setup-tide-tsx-mode ()
   (when (string-equal "tsx" (file-name-extension buffer-file-name))
     (setup-tide-mode)))
 
 (use-package! web-mode
-  :mode (("\\.html?\\'" . web-mode)
-         ("\\.tsx\\'" . web-mode))
+  :mode (("\\.html?\\'" . web-mode))
   :custom
   (web-mode-enable-current-element-highlight t)
   (web-mode-css-indent-offset 2)
@@ -176,9 +172,7 @@
   (web-mode-markup-indent-offset 2)
 
   (web-mode-enable-comment-annotation t)
-  (web-mode-enable-comment-interpolation t)
-  :init
-  (add-hook 'web-mode-hook 'setup-tide-tsx-mode))
+  (web-mode-enable-comment-interpolation t))
 
 (use-package! typescript-mode
   :custom
@@ -188,6 +182,8 @@
 
 (use-package! tide
   :after (typescript-mode company flycheck)
+  :init
+  (add-hook 'typescript-tsx-mode-hook 'setup-tide-mode)
   :config
   (map! :localleader
         :map tide-mode-map
